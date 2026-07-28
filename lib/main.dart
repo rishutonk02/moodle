@@ -1,33 +1,39 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:moodle/views/dashboard_view.dart';
-import 'package:moodle/views/courses_view.dart';
-import 'package:moodle/constants.dart';
+import 'package:moodle/routes/app_routes.dart';
+import 'package:moodle/services/firebase_service.dart';
+import 'package:moodle/theme/app_theme.dart';
 
-void main() {
-  runApp(const MoodleApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final firebaseReady = await FirebaseService.initialise();
+  final hasAuthenticatedUser =
+      firebaseReady && FirebaseAuth.instance.currentUser != null;
+
+  runApp(
+    MoodleApp(
+      initialRoute:
+          hasAuthenticatedUser ? AppRoutes.dashboard : AppRoutes.login,
+    ),
+  );
 }
 
 class MoodleApp extends StatelessWidget {
-  const MoodleApp({Key? key}) : super(key: key);
+  const MoodleApp({
+    super.key,
+    required this.initialRoute,
+  });
+
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Moodle',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: moodlePurple,
-          primary: moodlePurple,
-          secondary: moodleSecondary,
-          surface: moodleSurface,
-        ),
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const DashboardView(),
-        '/courses': (context) => const CoursesView(),
-      },
+      theme: AppTheme.light(),
+      initialRoute: initialRoute,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
       debugShowCheckedModeBanner: false,
     );
   }
