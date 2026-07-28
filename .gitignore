@@ -15,9 +15,16 @@
 # Tooling
 .dart_tool/
 .packages
+.flutter-plugins
+.flutter-plugins-dependencies
 .pub-cache/
 .pub/
 /build/
 
 # Coursework brief
 *.docx
+
+
+
+# Accidental nested template project; coursework lives at repository root.
+flutter_application_1/
