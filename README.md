@@ -1,157 +1,308 @@
-# Moodle — Flutter Coursework
+# Moodle Mobile Coursework
 
-## Table of Contents
+Flutter implementation of a mobile-first Moodle-style learning application for the University of Portsmouth coursework.
 
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Fork and Clone the Repository](#fork-and-clone-the-repository)
-- [Marking Criteria](#marking-criteria)
-  - [Application Marks (75%)](#application-marks-75)
-  - [Software Development Practices Marks (25%)](#software-development-practices-marks-25)
-- [Submission and Demonstration](#submission-and-demonstration)
+Student: Rishu Tonk  
+UP number: TODO: add UP number
 
----
+## Project Overview
 
-## Overview
+This app completes the provided incomplete coursework repository without moving the coursework into a separate Flutter project. It presents a Moodle-inspired dashboard, course catalogue, course details, assessments, calendar, notifications, announcements, profile and login flow. The app initializes Firebase before startup, opens the dashboard for returning authenticated users, and otherwise opens the login screen. Demo mode remains available from login for local assessment without Google Sign-In.
 
-Your task is to recreate a mobile-optimised version of the Moodle platform using Flutter. You must not start from scratch, as you need to begin by forking the GitHub repository that contains the incomplete template code. [The getting started section of this document](#getting-started) will explain more. Once you have completed the application, you will submit the link to your forked repository on Moodle for assessment and demonstrate your application on an online meeting, which you need to book using [this link](https://outlook.office.com/bookwithme/user/e0acc34f2ca040b295fb20cfce7425a2@port.ac.uk/meetingtype/qZuY5y_IuUimqFEq4d1oDA2?anonymous&ismsaljsauthenabled&ep=mlink). See the submission and demonstration sections for more information.
+## Features
 
----
+- Material Design 3 Moodle-style interface with consistent colour, spacing and reusable cards.
+- Responsive mobile, tablet and desktop layouts using `LayoutBuilder` and constrained content widths.
+- Navigation drawer, app bar actions, named routes and button/list navigation.
+- Dynamic courses with models, service classes, search and category filtering.
+- Course details with dynamic topics, resources, assignments and expandable sections.
+- Assignment submission page with online text input, file picker, local persisted submission state and submitted status.
+- Calendar page with coursework deadline and date filtering.
+- Notifications and announcements pages populated from local data or Firestore when configured.
+- Google Sign-In and Firebase Authentication service integration with graceful demo fallback.
+- Firestore integration for user profiles and submitted assignments.
+- Persistent login: previously authenticated Firebase users return directly to the dashboard.
+- Global app bar search across courses, assignments, resources and notifications.
+- Widget and unit tests for navigation, filtering, models and search.
 
-## Getting Started
+## Folder Structure
 
-### Prerequisites
+```text
+lib/
+  main.dart
+  constants.dart
+  models/       Data models for courses, assignments, submissions and notices
+  routes/       Named route definitions
+  services/     Course, auth, Firebase, search, notification and submission logic
+  theme/        Material 3 theme configuration
+  utils/        Student details and shared utility values
+  views/        App screens
+  widgets/      Reusable UI components
+test/
+  widget_test.dart
+android/
+  app/google-services.json
+ios/
+  Runner/
+web/
+  index.html
+```
 
-***You must already have a GitHub account to be able to start this coursework. If you have not done so, read and complete the exercises in [worksheet 0](https://manighahrmani.github.io/sandwich_shop/worksheet-0.html) before continuing.***
+## Technologies Used
 
-***You also need to be able to edit and run a Flutter project in your environment of choice. You must also be able to commit your changes to GitHub. Both of these are explained in [worksheet 1](https://manighahrmani.github.io/sandwich_shop/worksheet-1.html); complete it before continuing if you have not done so already.***
+- Flutter 3.44.8
+- Dart 3.12.2
+- Material Design 3
+- Firebase Core
+- Firebase Authentication
+- Cloud Firestore
+- Google Sign-In
+- File Picker
+- Shared Preferences
 
-⚠️ If you do not own a high-spec computer, you can either use the university's machines (see the “Remote access to University computers” section of [the Study Anywhere document linked here](https://myport.port.ac.uk/it-support/student-it-support/study-anywhere)) or use [Firebase Studio](https://firebase.studio/). More details are in [worksheet 1](https://manighahrmani.github.io/sandwich_shop/worksheet-1.html).
+## Dependencies
 
-### Fork and Clone the Repository
-
-#### Step 1: Fork the Repository
-
-Click the Fork button in the top right corner of [this page](https://github.com/manighahrmani/moodle/) to create your public copy of the repository. Or just head directly to this link: [https://github.com/manighahrmani/moodle/fork](https://github.com/manighahrmani/moodle/fork)
-
-![Step 1.1: Forking the Repository](images/step1_fork.png)
-
-Do not change anything on the Create fork page. You should then get a public fork of my repository with a URL like this (where YOUR-USERNAME is replaced with your actual GitHub username): [https://github.com/YOUR-USERNAME/moodle](https://github.com/YOUR-USERNAME/moodle)
-
-![Step 1.2: Forking the Repository](images/step1_fork_page.png)
-
-#### Step 2: Clone and Open in VS Code
-
-Open VS Code and click the Clone Repository button in the Source Control panel on the left side of the screen. Open your editor and clone this repository from the source control panel on the left. Alternatively, open the command palette with Ctrl+Shift+P or Cmd+Shift+P and enter “Git: Clone”.
-
-![Step 2.1: Opening in VS Code](images/step2_vscode.png)
-
-Paste the URL of your forked repository and press enter. You will then be prompted to select Open in This Window to open the cloned repository in VS Code.
-
-![Step 2.2: Selecting the Repository](images/step2_repos.png)
-
-If asked to install the Flutter extension and run flutter pub get in the pop-ups, go ahead and install and run them.
-
-![Step 2.3: Installing Flutter Extension and Running pub get](images/step2_install.png)
-
-If you do not get these pop-ups, go to the extensions tab on the left side of the screen and install the Flutter extension manually. Then, open the terminal and run flutter pub get. See the screenshot below for reference.
-
-![Step 2.4: Installing Flutter Extension and Running pub get](images/step2_install_alternative.png)
-
-#### Step 3: Complete First Setup Task
-
-***Open the lib/widgets/nav_drawer.dart file.***
-
-***Replace "Yourname Here" with your actual name.***
-
-***Replace "up1234567" with your actual UP identification number.***
-
-***Save the file and commit your change as shown below:***
-
-![Step 3: Complete First Setup Task](images/step3_commit.png)
-
-#### Step 4: Run the Application
+Run:
 
 ```bash
 flutter pub get
-flutter run -d chrome
 ```
 
-Alternatively, click on the run button in the `main.dart` as shown below and make sure the device is set to Chrome:
+Main packages are declared in `pubspec.yaml`:
 
-![Step 4: Run the Application](images/step4_terminal.png)
+- `firebase_core`
+- `firebase_auth`
+- `cloud_firestore`
+- `google_sign_in`
+- `file_picker`
+- `shared_preferences`
 
-The application will build and open in a new Chrome browser window, displaying the Dashboard.
+## Requirements
 
-#### Step 5: Emulate Mobile Layout in DevTools
+- Flutter SDK installed and available on PATH.
+- VS Code with Flutter and Dart extensions.
+- Chrome for web testing.
+- Android Studio or Xcode if running on Android or iOS.
+- Firebase project configured for Web and Android.
 
-To view the responsive layout and test your application:
+## VS Code Setup
 
-***Press F12 (or right-click anywhere and select Inspect) in Chrome to open Developer Tools.***
+1. Open this repository folder in VS Code.
+2. Install the Flutter and Dart extensions when prompted.
+3. Open a terminal in the repository root.
+4. Run `flutter pub get`.
+5. Select a device from the VS Code status bar.
+6. Run the app with `flutter run`.
 
-***Click the Toggle Device Toolbar icon (or press Ctrl+Shift+M / Cmd+Shift+M) to emulate a mobile screen.***
+## How To Run
 
-***From the left-hand side dropdown, select an iPhone (e.g., iPhone 12 Pro) to emulate a mobile layout. See the screenshot below for reference.***
+```bash
+flutter pub get
+flutter run
+```
 
-![Step 5: Emulate Mobile Layout in DevTools](images/step5_devtools_open.png)
+Run on Chrome:
 
-Remember your application must be designed for mobile devices first (we may not even run your submission on desktop layout during the demo).
+```bash
+flutter run -d chrome --no-web-resources-cdn
+```
 
----
+Run on Android:
 
-## Marking Criteria
+```bash
+flutter devices
+flutter run -d <android-device-id>
+```
 
-This assessment is worth 100% of the mark for item 1. The mark for the assessment is divided into two components:
+Run on iOS:
 
-***Application (functionality) (30%): Demonstrated through a live online demo booked using [this link](https://outlook.office.com/bookwithme/user/e0acc34f2ca040b295fb20cfce7425a2@port.ac.uk/meetingtype/qZuY5y_IuUimqFEq4d1oDA2?anonymous&ismsaljsauthenabled&ep=mlink)***
+```bash
+flutter devices
+flutter run -d <ios-device-id>
+```
 
-***Software Development Practices (25%): Assessed through your repository***
+## Testing
 
-⚠️ You will only receive marks if you both submit the link to your forked repository on Moodle before the deadline and attend a demo session. Failure to do either will result in a mark of 0 for the entire coursework.
+```bash
+flutter test
+flutter analyze
+```
 
-### Application Marks (75%)
+## Build Commands
 
-Your objective is to reimplement features from the Moodle platform in your forked repository using Flutter. The features are structured as follows:
+Build web:
 
-| Feature | Description | Marks (%) |
-| :--- | :--- | :--- |
-| **Basic (40%)** | | |
-| [Static Dashboard](https://moodle.port.ac.uk/my/) | Dashboard layout and widgets with static content (hardcoded data acceptable, mobile view) | 10% |
-| [Static Navigation Drawer / AppBar](https://moodle.port.ac.uk/my/) | Top app bar and side navigation drawer with menus (links do not have to work at this stage) | 5% |
-| [Profile Page](https://moodle.port.ac.uk/user/profile.php) | Static profile view showing your student information, | 5% |
-| [Dummy Courses Page](https://moodle.port.ac.uk/my/courses.php) | Page displaying various modules you have (hardcoded data acceptable) | 5% |
-| Dummy Course Details Page (use your PAPL or UXDI module, i.e., this module) | Page displaying a few sections of the module, you can use placeholder text, linked copied from Moodle or images that you see on Moodle | 5% |
-| [Dummy Assessments Page](https://moodle.port.ac.uk/local/extend/myassessments.php) | Page showing assessments details, their dates and status (hardcoded data acceptable) | 3% |
-| [Calendar Page](https://moodle.port.ac.uk/calendar/view.php?view=month) | Section or page showing past or upcoming deadlines/tasks (hardcoded data acceptable, widgets do not need to function) | 4% |
-| [Authentication UI](https://moodle.port.ac.uk/login/index.php) | Login page (log out from Moodle and try the link to the left, buttons do not have to function) | 3% |
-| **Intermediate (35%)** | | |
-| Functioning Navigation | Full navigation across all pages; users should be able to navigate using the drawer, buttons, and URLs | 3% |
-| Dynamic Courses Overview Page | Courses overview page populated from data models or services with functioning search or filtering widgets | 6% |
-| Dynamic Course Details Page | Course topics and materials populated from data models or services with functioning expand/collapse or filtering widgets (you need to have at least one page fully functioning) | 6% |
-| Functional Assignment Submission | Assignment pages populated from data models or services with functioning text fields, file attachments, and local submission updates (you can recreate the assignment section for this coursework) | 6% |
-| Interactive Calendar | A functional calendar or list widget allowing users to filter upcoming tasks by date or view deadlines dynamically (the deadline for this coursework must be accurately displayed) | 6% |
-| [Notifications / Announcements Panel and Page](https://moodle.port.ac.uk/message/output/popup/notifications.php) | Working messaging drawer or notification side-panel displaying a list of alerts or system announcements | 3% |
-| Responsiveness | The layout of the application should be adaptive, and the application should function on desktop in addition to mobile view | 5% |
-| **Advanced (25%)** | | |
-| Authentication System | Full user authentication and account management (you must use Firebase Auth and enable Google Login) with persistent profile details | 15% |
-| Global Search | Complete search functionality across courses, resources, or activities from the AppBar or dashboard | 10% |
+```bash
+flutter build web --no-web-resources-cdn
+```
 
-*\*Hardcoded data refers to data written directly in code files rather than fetched from a live database. \*Dummy data is data generated for testing and illustration purposes.*
+Build Android APK:
 
-### Software Development Practices Marks (25%)
+```bash
+flutter build apk
+```
 
-| Feature | Description | Marks (%) |
-| :--- | :--- | :--- |
-| **Git** | Regular, small, meaningful commits to your repository throughout development; clear commit messages | 40% |
-| **README** | A comprehensive, well-formatted and accurate README file (delete the template README first) | 30% |
-| **Testing** | Tests covering all or almost all of the application; passing tests | 20% |
-| **External Services** | Integration and utilisation of cloud services (at least two services, e.g., Auth, DB, Hosting) | 10% |
+Build iOS:
 
----
+```bash
+flutter build ios
+```
 
-## Submission and Demonstration
+## Firebase Setup
 
-**Submission:** Submit the link to your public forked repository on Moodle before the deadline. Open the Moodle page, locate the submission page for referral/deferral and paste your link into the editable Online Text field.
+Firebase has been configured for this coursework project for Web and Android:
 
-**Demonstration:** The demos will take place online. You need to book your meetings **by 27th of July** using [this link](https://outlook.office.com/bookwithme/user/e0acc34f2ca040b295fb20cfce7425a2@port.ac.uk/meetingtype/qZuY5y_IuUimqFEq4d1oDA2?anonymous&ismsaljsauthenabled&ep=mlink). You will have up to 10 minutes to run your app live from a fresh clone and answer technical questions regarding your code and architecture.
+- Project id: `moodle-coursework`
+- Android package name: `uk.ac.port.rishutonk.moodle`
+- Web app id: `1:781794007547:web:502966230b42142a80135e`
+- Android app id: `1:781794007547:android:2ef6e57e062fef3480135e`
+- Generated options: `lib/firebase_options.dart`
+- Android config file: `android/app/google-services.json`
+
+Use these steps if the Firebase project needs to be recreated or configured on another machine.
+
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
+2. Install Firebase CLI:
+
+```bash
+npm install -g firebase-tools
+firebase login
+```
+
+3. Install FlutterFire CLI:
+
+```bash
+dart pub global activate flutterfire_cli
+```
+
+4. Register apps in Firebase:
+
+- Android app using package name `uk.ac.port.rishutonk.moodle`.
+- Web app for Chrome builds.
+- iOS app using the iOS bundle identifier.
+
+5. Download platform credential files:
+
+- Place `google-services.json` in `android/app/`.
+- Place `GoogleService-Info.plist` in `ios/Runner/`.
+- Web configuration is generated into `firebase_options.dart` by FlutterFire.
+
+6. Run FlutterFire configuration for Android and Web:
+
+```bash
+flutterfire configure \
+  --project=moodle-coursework \
+  --platforms=android,web \
+  --android-package-name=uk.ac.port.rishutonk.moodle \
+  --web-app-id=1:781794007547:web:502966230b42142a80135e \
+  --android-out=android/app/google-services.json \
+  --out=lib/firebase_options.dart
+```
+
+7. Confirm Firebase initialization uses the generated options:
+
+```dart
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+```
+
+`main.dart` waits for this initialization before calling `runApp`.
+
+8. Enable Firebase Authentication:
+
+- Open Firebase Console.
+- Go to Authentication.
+- Enable Google provider.
+- Add required support email.
+- Add authorized domains for web, including localhost for testing.
+
+9. Enable Cloud Firestore:
+
+- Create a Firestore database.
+- Start in test mode only for local development.
+- Add collections as the app writes data:
+  - `users`
+  - `submitted_assignments`
+  - `notifications`
+
+10. Suggested Firestore security rules for authenticated users:
+
+```text
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /submitted_assignments/{submissionId} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}
+```
+
+11. Verify Firebase:
+
+```bash
+flutter pub get
+flutter run -d chrome --no-web-resources-cdn
+```
+
+Then open Login, choose Google Sign-In, confirm the profile screen displays the authenticated user's name, email and profile image, submit an assignment and check Firestore.
+
+## Android Setup
+
+The coursework root now contains restored Flutter platform folders:
+
+- `android/`
+- `ios/`
+
+The accidental nested `flutter_application_1/` template project is ignored and is not used.
+
+Run on Android:
+
+```bash
+flutter pub get
+flutter devices
+flutter run -d <android-device-id>
+```
+
+Build Android APK:
+
+```bash
+flutter build apk
+```
+
+## Web Setup
+
+Run on Chrome:
+
+```bash
+flutter pub get
+flutter run -d chrome --no-web-resources-cdn
+```
+
+The web app uses `DefaultFirebaseOptions.web` from `lib/firebase_options.dart`.
+The `--no-web-resources-cdn` flag is important on networks where `www.gstatic.com` is blocked or slow, because it serves Flutter CanvasKit from the local Flutter SDK instead of the CDN.
+
+## Manual Steps Still Required
+
+- Replace `TODO: add UP number` in `lib/utils/student_details.dart` and this README when the actual UP number is available.
+- Add iOS Firebase configuration only if iOS live Firebase login is required for demonstration.
+
+## Verification
+
+Completed local checks:
+
+```bash
+flutter analyze
+flutter test
+flutter build web --no-web-resources-cdn
+```
