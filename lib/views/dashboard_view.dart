@@ -1,143 +1,215 @@
 import 'package:flutter/material.dart';
-import 'package:moodle/widgets/nav_drawer.dart';
 import 'package:moodle/constants.dart';
+import 'package:moodle/routes/app_routes.dart';
+import 'package:moodle/services/course_service.dart';
+import 'package:moodle/services/notification_service.dart';
+import 'package:moodle/utils/student_details.dart';
+import 'package:moodle/widgets/app_shell.dart';
+import 'package:moodle/widgets/course_card.dart';
+import 'package:moodle/widgets/responsive_page.dart';
+import 'package:moodle/widgets/section_card.dart';
 
 class DashboardView extends StatelessWidget {
-  const DashboardView({Key? key}) : super(key: key);
+  const DashboardView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: moodleWhite,
-        foregroundColor: moodleTextDark,
-        elevation: 1,
-        titleSpacing: 0,
-        title: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                width: 32,
-                height: 32,
-                child: Image.asset(
-                  'images/moodle_logo.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const Text(
-                'Dashboard',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ],
+    final courseService = CourseService();
+    final courses = courseService.getCourses(category: 'Current');
+    final events = courseService.getCalendarEvents().take(3).toList();
+    final announcements = NotificationService().getLocalAnnouncements();
+
+    return AppShell(
+      title: 'Dashboard',
+      body: ResponsivePage(
+        children: [
+          const PageHeader(
+            title: 'Dashboard',
+            subtitle:
+                'Welcome back, Rishu. Your Moodle activity is up to date.',
+            icon: Icons.speed_outlined,
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {},
+          const SizedBox(height: 20),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth > 900 ? 3 : 1;
+              return GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: columns,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: constraints.maxWidth > 900 ? 2.9 : 3.8,
+                children: const [
+                  _MetricCard(
+                    icon: Icons.school_outlined,
+                    value: '3',
+                    label: 'Active courses',
+                  ),
+                  _MetricCard(
+                    icon: Icons.assignment_outlined,
+                    value: '5',
+                    label: 'Assessments',
+                  ),
+                  _MetricCard(
+                    icon: Icons.notifications_outlined,
+                    value: '2',
+                    label: 'Unread notices',
+                  ),
+                ],
+              );
+            },
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_none_outlined),
-            onPressed: () {},
+          const SizedBox(height: 20),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 760;
+              final left = Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Recently accessed courses',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...courses.take(2).map(
+                        (course) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: CourseCard(course: course),
+                        ),
+                      ),
+                ],
+              );
+              final right = Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _DashboardList(
+                    title: 'Upcoming deadlines',
+                    items: events
+                        .map((event) =>
+                            '${event.courseCode}: ${event.title} (${event.date.day}/${event.date.month})')
+                        .toList(),
+                    onViewAll: () =>
+                        Navigator.pushNamed(context, AppRoutes.calendar),
+                  ),
+                  const SizedBox(height: 12),
+                  _DashboardList(
+                    title: 'Latest announcements',
+                    items: announcements
+                        .take(3)
+                        .map((item) => '${item.courseCode}: ${item.title}')
+                        .toList(),
+                    onViewAll: () =>
+                        Navigator.pushNamed(context, AppRoutes.announcements),
+                  ),
+                ],
+              );
+              if (!isWide) {
+                return Column(
+                    children: [left, const SizedBox(height: 12), right]);
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 3, child: left),
+                  const SizedBox(width: 18),
+                  Expanded(flex: 2, child: right),
+                ],
+              );
+            },
           ),
-          IconButton(
-            icon: const Icon(Icons.chat_bubble_outline),
-            onPressed: () {},
+          const SizedBox(height: 8),
+          const Text(
+            'UP number: ${StudentDetails.upNumber}',
+            style: TextStyle(color: moodleTextMuted),
           ),
-          const SizedBox(width: 8),
-          const CircleAvatar(
-            radius: 18,
-            backgroundColor: moodleGrayBg,
-            foregroundColor: moodlePurple,
-            child: Text(
-              'YH',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-          ),
-          const SizedBox(width: 16),
         ],
       ),
-      drawer: const NavDrawer(),
-      body: Container(
-        color: moodleBg,
-        child: const SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    );
+  }
+}
+
+class _MetricCard extends StatelessWidget {
+  const _MetricCard({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: moodleBlue.withValues(alpha: 0.12),
+            child: Icon(icon, color: moodleBlue),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Dashboard',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: moodlePurple,
-                ),
+                value,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
               ),
-              SizedBox(height: 24),
-              Card(
-                color: moodleWhite,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: moodleBorder),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Feature Placeholder 1',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: moodlePurple,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'This is a placeholder block.',
-                        style: TextStyle(fontSize: 14, color: moodleTextMuted),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 24),
-              Card(
-                color: moodleWhite,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: moodleBorder),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Feature Placeholder 2',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: moodlePurple,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'This is a placeholder block.',
-                        style: TextStyle(fontSize: 14, color: moodleTextMuted),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              Text(label),
             ],
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DashboardList extends StatelessWidget {
+  const _DashboardList({
+    required this.title,
+    required this.items,
+    required this.onViewAll,
+  });
+
+  final String title;
+  final List<String> items;
+  final VoidCallback onViewAll;
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+              ),
+              TextButton(onPressed: onViewAll, child: const Text('View all')),
+            ],
+          ),
+          ...items.map(
+            (item) => ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.chevron_right, color: moodlePurple),
+              title: Text(item),
+            ),
+          ),
+        ],
       ),
     );
   }
