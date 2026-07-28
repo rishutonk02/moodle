@@ -3,7 +3,7 @@
 Flutter implementation of a mobile-first Moodle-style learning application for the University of Portsmouth coursework.
 
 Student: Rishu Tonk  
-UP number: TODO: add UP number
+UP number: UP2286527
 
 ## Project Overview
 
