@@ -1,88 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:moodle/widgets/nav_drawer.dart';
-import 'package:moodle/constants.dart';
+import 'package:moodle/services/course_service.dart';
+import 'package:moodle/widgets/app_shell.dart';
+import 'package:moodle/widgets/course_card.dart';
+import 'package:moodle/widgets/responsive_page.dart';
+import 'package:moodle/widgets/section_card.dart';
 
-class CoursesView extends StatelessWidget {
-  const CoursesView({Key? key}) : super(key: key);
+class CoursesView extends StatefulWidget {
+  const CoursesView({super.key});
+
+  @override
+  State<CoursesView> createState() => _CoursesViewState();
+}
+
+class _CoursesViewState extends State<CoursesView> {
+  final CourseService _courseService = CourseService();
+  String _query = '';
+  String _category = 'All';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: moodleWhite,
-        foregroundColor: moodleTextDark,
-        elevation: 1,
-        titleSpacing: 0,
-        title: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                width: 32,
-                height: 32,
-                child: Image.asset(
-                  'images/moodle_logo.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const Text(
-                'My courses',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ],
+    final courses =
+        _courseService.getCourses(query: _query, category: _category);
+    final categories = _courseService.getCategories();
+
+    return AppShell(
+      title: 'My courses',
+      body: ResponsivePage(
+        children: [
+          const PageHeader(
+            title: 'My courses',
+            subtitle: 'Search, filter and open course content dynamically.',
+            icon: Icons.school_outlined,
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_none_outlined),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.chat_bubble_outline),
-            onPressed: () {},
-          ),
-          const SizedBox(width: 8),
-          const CircleAvatar(
-            radius: 18,
-            backgroundColor: moodleGrayBg,
-            foregroundColor: moodlePurple,
-            child: Text(
-              'YH',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+          const SizedBox(height: 16),
+          SectionCard(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 620;
+                final search = TextField(
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    labelText: 'Search courses',
+                  ),
+                  onChanged: (value) => setState(() => _query = value),
+                );
+                final filter = DropdownButtonFormField<String>(
+                  initialValue: _category,
+                  decoration: const InputDecoration(labelText: 'Filter'),
+                  items: categories
+                      .map((category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _category = value);
+                    }
+                  },
+                );
+                if (!isWide) {
+                  return Column(
+                      children: [search, const SizedBox(height: 12), filter]);
+                }
+                return Row(
+                  children: [
+                    Expanded(flex: 2, child: search),
+                    const SizedBox(width: 12),
+                    Expanded(child: filter),
+                  ],
+                );
+              },
             ),
           ),
-          const SizedBox(width: 16),
-        ],
-      ),
-      drawer: const NavDrawer(),
-      body: Container(
-        color: moodleBg,
-        child: const SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'My courses',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: moodlePurple,
+          const SizedBox(height: 16),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth > 900
+                  ? 3
+                  : constraints.maxWidth > 620
+                      ? 2
+                      : 1;
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: courses.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: columns == 1 ? 1.55 : 1.05,
                 ),
-              ),
-              SizedBox(height: 24),
-              Text(
-                'This is the courses overview page.',
-                style: TextStyle(fontSize: 16, color: moodleTextDark),
-              ),
-            ],
+                itemBuilder: (context, index) =>
+                    CourseCard(course: courses[index]),
+              );
+            },
           ),
-        ),
+        ],
       ),
     );
   }
