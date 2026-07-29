@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle/routes/app_routes.dart';
 import 'package:moodle/services/firebase_service.dart';
-import 'package:moodle/theme/app_theme.dart';
+import 'package:moodle/themes/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
