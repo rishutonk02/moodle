@@ -16,7 +16,7 @@ class CourseService {
           CourseTopic(
             title: 'Flutter essentials',
             description: 'State management, navigation and widgets.',
-            items: ['Widget tree', 'Routes', 'Themes'],
+            items: ['Widget tree', 'Routes', 'theme'],
           ),
           CourseTopic(
             title: 'Backend integration',
