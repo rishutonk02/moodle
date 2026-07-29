@@ -31,7 +31,9 @@ class _LoginViewState extends State<LoginView> {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signed in as ${profile.name}')),
+        SnackBar(
+            content:
+                Text('Signed in as ${profile.displayName ?? profile.email}')),
       );
       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
     } catch (error) {
