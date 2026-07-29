@@ -3,7 +3,7 @@ import 'package:moodle/constants.dart';
 import 'package:moodle/routes/app_routes.dart';
 import 'package:moodle/services/course_service.dart';
 import 'package:moodle/services/notification_service.dart';
-import 'package:moodle/utils/student_details.dart';
+import 'package:moodle/utils/students_details.dart';
 import 'package:moodle/widgets/app_shell.dart';
 import 'package:moodle/widgets/course_card.dart';
 import 'package:moodle/widgets/responsive_page.dart';
