@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moodle/constants.dart';
 import 'package:moodle/models/user_profile.dart';
 import 'package:moodle/services/auth_service.dart';
-import 'package:moodle/utils/student_details.dart';
+import 'package:moodle/utils/students_details.dart';
 import 'package:moodle/widgets/app_shell.dart';
 import 'package:moodle/widgets/responsive_page.dart';
 import 'package:moodle/widgets/section_card.dart';
