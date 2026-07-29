@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "781794007547",
+    "project_id": "moodle-coursework",
+    "storage_bucket": "moodle-coursework.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781794007547:android:2ef6e57e062fef3480135e",
+        "android_client_info": {
+          "package_name": "uk.ac.port.rishutonk.moodle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781794007547-dvnh549tfq040qognigbu4lh7ab24ct2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqp8dELY9Mi0QcQB2L_C-iMw4ahqMkBNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781794007547-dvnh549tfq040qognigbu4lh7ab24ct2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
