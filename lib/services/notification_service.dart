@@ -1,34 +1,60 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moodle/models/announcement.dart';
 
 class NotificationService {
-  Future<List<Announcement>> getAnnouncements() async {
+  NotificationService({FirebaseFirestore? firestore}) : _firestore = firestore;
+
+  final FirebaseFirestore? _firestore;
+
+  List<Announcement> getLocalAnnouncements() {
     return [
-      const Announcement(
-        id: 'ann-1',
-        title: 'Coursework reminder',
-        message: 'Your mobile app coursework is due soon.',
-        courseCode: 'CMP5002',
-        isRead: false,
+      Announcement(
+        id: 'welcome',
+        title: 'Welcome back to Moodle',
+        message:
+            'Your dashboard has been refreshed with current courses and deadlines.',
+        courseCode: 'Moodle',
+        createdAt: DateTime(2026, 7, 24, 9, 0),
       ),
-      const Announcement(
-        id: 'ann-2',
-        title: 'Lecture rescheduled',
-        message: 'The Flutter workshop has moved to the main lab.',
-        courseCode: 'CMP5002',
+      Announcement(
+        id: 'coursework',
+        title: 'Coursework submission reminder',
+        message:
+            'Submit the public repository link before the coursework deadline.',
+        courseCode: 'CTEC3905',
+        createdAt: DateTime(2026, 7, 23, 14, 30),
+      ),
+      Announcement(
+        id: 'firebase',
+        title: 'Firebase configuration',
+        message:
+            'Remember to add Firebase app credentials before demonstrating live authentication.',
+        courseCode: 'CTEC3905',
+        createdAt: DateTime(2026, 7, 21, 11, 0),
         isRead: true,
       ),
     ];
   }
 
-  List<Announcement> getLocalAnnouncements() {
-    return [
-      const Announcement(
-        id: 'local-1',
-        title: 'New assessment posted',
-        message: 'Check the latest coursework brief.',
-        courseCode: 'CMP5002',
-        isRead: false,
-      ),
-    ];
+  Future<List<Announcement>> getAnnouncements() async {
+    final firestore = _firestore;
+    if (firestore == null) {
+      return getLocalAnnouncements();
+    }
+
+    try {
+      final snapshot = await firestore
+          .collection('notifications')
+          .orderBy('createdAt', descending: true)
+          .get();
+      if (snapshot.docs.isEmpty) {
+        return getLocalAnnouncements();
+      }
+      return snapshot.docs
+          .map((doc) => Announcement.fromFirestore(doc.data()))
+          .toList();
+    } catch (_) {
+      return getLocalAnnouncements();
+    }
   }
 }
