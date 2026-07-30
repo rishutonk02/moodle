@@ -8,10 +8,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         routes: {
-          '/': (_) => const Scaffold(
+          '/': (_) => Scaffold(
                 appBar: AppBar(),
-                drawer: NavDrawer(),
-                body: Text('Home'),
+                drawer: const NavDrawer(),
+                body: const Text('Home'),
               ),
           '/courses': (_) => const Scaffold(body: Text('Courses page')),
         },
@@ -31,10 +31,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         routes: {
-          '/': (_) => const Scaffold(
+          '/': (_) => Scaffold(
                 appBar: AppBar(),
-                drawer: NavDrawer(),
-                body: Text('Home'),
+                drawer: const NavDrawer(),
+                body: const Text('Home'),
               ),
           '/courses': (_) => const Scaffold(body: Text('Courses page')),
         },
