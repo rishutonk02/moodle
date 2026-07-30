@@ -15,6 +15,8 @@ void main() {
       progress: 0.75,
       topics: [],
       assignments: [],
+      category: '',
+      resources: [],
     );
 
     await tester.pumpWidget(
