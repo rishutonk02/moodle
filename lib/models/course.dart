@@ -3,21 +3,25 @@ class Course {
     required this.id,
     required this.code,
     required this.title,
-    required this.tutor,
     required this.summary,
+    required this.tutor,
     required this.progress,
+    required this.category,
     required this.topics,
     required this.assignments,
+    required this.resources,
   });
 
   final String id;
   final String code;
   final String title;
-  final String tutor;
   final String summary;
+  final String tutor;
   final double progress;
+  final String category;
   final List<CourseTopic> topics;
   final List<Assignment> assignments;
+  final List<ResourceItem> resources;
 }
 
 class CourseTopic {
@@ -38,14 +42,34 @@ class Assignment {
     required this.courseId,
     required this.title,
     required this.description,
-    required this.points,
     required this.dueDate,
+    required this.status,
+    required this.points,
   });
 
   final String id;
   final String courseId;
   final String title;
   final String description;
-  final int points;
   final DateTime dueDate;
+  final AssignmentStatus status;
+  final int points;
 }
+
+enum AssignmentStatus { notStarted, draft, submitted, graded }
+
+class ResourceItem {
+  const ResourceItem({
+    required this.id,
+    required this.courseId,
+    required this.title,
+    required this.type,
+  });
+
+  final String id;
+  final String courseId;
+  final String title;
+  final ResourceType type;
+}
+
+enum ResourceType { file, video, link, quiz }
