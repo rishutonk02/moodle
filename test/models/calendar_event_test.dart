@@ -3,7 +3,7 @@ import 'package:moodle/models/calendar_event.dart';
 
 void main() {
   test('calendar event derives the enum name', () {
-    const event = CalendarEvent(
+    final event = CalendarEvent(
       id: 'deadline-1',
       title: 'Coursework brief released',
       courseCode: 'CMP5002',
