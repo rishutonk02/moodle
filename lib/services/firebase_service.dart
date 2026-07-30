@@ -10,7 +10,6 @@ class FirebaseService {
       }
       return true;
     } catch (error) {
-      print('Firebase initialisation failed: $error');
       return false;
     }
   }
