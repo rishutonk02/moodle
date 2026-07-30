@@ -45,16 +45,19 @@ class DashboardView extends StatelessWidget {
                     icon: Icons.school_outlined,
                     value: '3',
                     label: 'Active courses',
+                    routeName: AppRoutes.courses,
                   ),
                   _MetricCard(
                     icon: Icons.assignment_outlined,
                     value: '5',
                     label: 'Assessments',
+                    routeName: AppRoutes.assessments,
                   ),
                   _MetricCard(
                     icon: Icons.notifications_outlined,
                     value: '2',
                     label: 'Unread notices',
+                    routeName: AppRoutes.notifications,
                   ),
                 ],
               );
@@ -136,36 +139,45 @@ class _MetricCard extends StatelessWidget {
     required this.icon,
     required this.value,
     required this.label,
+    required this.routeName,
   });
 
   final IconData icon;
   final String value;
   final String label;
+  final String routeName;
 
   @override
   Widget build(BuildContext context) {
-    return SectionCard(
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: moodleBlue.withValues(alpha: 0.12),
-            child: Icon(icon, color: moodleBlue),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => Navigator.pushNamed(context, routeName),
+        child: SectionCard(
+          child: Row(
             children: [
-              Text(
-                value,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+              CircleAvatar(
+                backgroundColor: moodleBlue.withValues(alpha: 0.12),
+                child: Icon(icon, color: moodleBlue),
               ),
-              Text(label),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    value,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                  ),
+                  Text(label),
+                ],
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
