@@ -10,27 +10,29 @@ class AssignmentSubmission {
   final String assignmentId;
   final String userId;
   final String text;
-  final String? attachmentName;
+  final String attachmentName;
   final DateTime submittedAt;
 
-  bool get hasAttachment =>
-      attachmentName != null && attachmentName!.isNotEmpty;
+  bool get hasAttachment => attachmentName.isNotEmpty;
 
-  Map<String, dynamic> toJson() => {
-        'assignmentId': assignmentId,
-        'userId': userId,
-        'text': text,
-        'attachmentName': attachmentName,
-        'submittedAt': submittedAt.toIso8601String(),
-      };
+  Map<String, Object?> toJson() {
+    return {
+      'assignmentId': assignmentId,
+      'userId': userId,
+      'text': text,
+      'attachmentName': attachmentName,
+      'submittedAt': submittedAt.toIso8601String(),
+    };
+  }
 
-  factory AssignmentSubmission.fromJson(Map<String, dynamic> json) {
+  factory AssignmentSubmission.fromJson(Map<String, Object?> json) {
     return AssignmentSubmission(
-      assignmentId: json['assignmentId'] as String,
-      userId: json['userId'] as String,
-      text: json['text'] as String,
-      attachmentName: json['attachmentName'] as String?,
-      submittedAt: DateTime.parse(json['submittedAt'] as String),
+      assignmentId: json['assignmentId'] as String? ?? '',
+      userId: json['userId'] as String? ?? '',
+      text: json['text'] as String? ?? '',
+      attachmentName: json['attachmentName'] as String? ?? '',
+      submittedAt: DateTime.tryParse(json['submittedAt'] as String? ?? '') ??
+          DateTime.now(),
     );
   }
 }
