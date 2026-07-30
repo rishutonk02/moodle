@@ -10,7 +10,7 @@ void main() {
     final profile = AuthService().getFallbackProfile();
 
     expect(profile.name, 'Rishu Tonk');
-    expect(profile.email, 'up2286527@myport.ac.uk);
+    expect(profile.email, 'up2286527@myport.ac.uk');
     expect(profile.photoUrl, isNull);
   });
 }
