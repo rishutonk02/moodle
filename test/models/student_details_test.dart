@@ -6,6 +6,6 @@ void main() {
     expect(StudentDetails.name, 'Rishu Tonk');
     expect(StudentDetails.upNumber, '2286527');
     expect(StudentDetails.initials, 'RT');
-    expect(StudentDetails.email, contains('up2286527@myport.ac.uk'));
+    expect(StudentDetails.email, 'up2286527@myport.ac.uk');
   });
 }
