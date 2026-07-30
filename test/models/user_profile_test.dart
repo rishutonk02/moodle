@@ -6,13 +6,13 @@ void main() {
     const profile = AppUserProfile(
       uid: 'student-1',
       name: 'Rishu Tonk',
-      email: 'rishu@example.com',
+      email: 'up2286527@myport.ac.uk',
       photoUrl: 'https://example.com/avatar.png',
     );
 
     expect(profile.uid, 'student-1');
     expect(profile.name, 'Rishu Tonk');
-    expect(profile.email, 'rishu@example.com');
+    expect(profile.email, 'up2286527@myport.ac.uk');
     expect(profile.photoUrl, 'https://example.com/avatar.png');
   });
 
@@ -20,7 +20,7 @@ void main() {
     const profile = AppUserProfile(
       uid: 'student-1',
       name: 'Rishu Tonk',
-      email: 'rishu@example.com',
+      email: 'up2286527@myport.ac.uk',
       photoUrl: null,
     );
 
@@ -31,7 +31,7 @@ void main() {
     const profile = AppUserProfile(
       uid: 'student-1',
       name: 'Rishu Tonk',
-      email: 'rishu@example.com',
+      email: 'up2286527@myport.ac.uk',
       photoUrl: 'https://example.com/avatar.png',
     );
 
@@ -40,7 +40,7 @@ void main() {
 
     expect(restored.uid, 'student-1');
     expect(restored.name, 'Rishu Tonk');
-    expect(restored.email, 'rishu@example.com');
+    expect(restored.email, 'up2286527@myport.ac.uk');
     expect(restored.photoUrl, 'https://example.com/avatar.png');
   });
 }
